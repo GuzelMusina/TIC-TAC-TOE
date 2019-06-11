@@ -4,10 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/Vanavski/Desktop/TicTacToe/Board.cpp" "C:/Users/Vanavski/Desktop/TicTacToe/cmake-build-debug/CMakeFiles/TicTacToe.dir/Board.cpp.obj"
-  "C:/Users/Vanavski/Desktop/TicTacToe/Computer.cpp" "C:/Users/Vanavski/Desktop/TicTacToe/cmake-build-debug/CMakeFiles/TicTacToe.dir/Computer.cpp.obj"
-  "C:/Users/Vanavski/Desktop/TicTacToe/Game.cpp" "C:/Users/Vanavski/Desktop/TicTacToe/cmake-build-debug/CMakeFiles/TicTacToe.dir/Game.cpp.obj"
-  "C:/Users/Vanavski/Desktop/TicTacToe/main.cpp" "C:/Users/Vanavski/Desktop/TicTacToe/cmake-build-debug/CMakeFiles/TicTacToe.dir/main.cpp.obj"
+  "C:/Users/mecaz/Desktop/KRESTIKI/Board.cpp" "C:/Users/mecaz/Desktop/KRESTIKI/cmake-build-debug/CMakeFiles/TicTacToe.dir/Board.cpp.obj"
+  "C:/Users/mecaz/Desktop/KRESTIKI/Computer.cpp" "C:/Users/mecaz/Desktop/KRESTIKI/cmake-build-debug/CMakeFiles/TicTacToe.dir/Computer.cpp.obj"
+  "C:/Users/mecaz/Desktop/KRESTIKI/Game.cpp" "C:/Users/mecaz/Desktop/KRESTIKI/cmake-build-debug/CMakeFiles/TicTacToe.dir/Game.cpp.obj"
+  "C:/Users/mecaz/Desktop/KRESTIKI/main.cpp" "C:/Users/mecaz/Desktop/KRESTIKI/cmake-build-debug/CMakeFiles/TicTacToe.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

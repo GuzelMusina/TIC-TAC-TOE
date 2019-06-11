@@ -28,6 +28,7 @@ class Board{
 	Board();
 	void clear();
 	void print();
+	void printInFile();
 	bool checkEmpty(int, int);
 	bool win(int, int);
 	bool draw();

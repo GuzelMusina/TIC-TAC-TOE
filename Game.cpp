@@ -246,6 +246,7 @@ void Game::run(){
 	char x;
 	while (flag){
 		playConsole();
+		board.printInFile();
 		cout << "Do you want to play another game? y/n"<<endl;
 		cin >> x;
 		if (x == 'N' || x == 'n'){

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "Board.h"
+#include <fstream>
 
 using namespace std;
 
@@ -167,5 +168,32 @@ string Board::toString(){
 		}
 	}
 	return s;
+}
+void Board::printInFile() {
+    ofstream out;
+    out.open("C:\\Users\\mecaz\\Desktop\\KRESTIKI\\res.txt");
+    if(out.is_open()){
+        out << "   " << endl;
+        for (int i = 0; i < N; i++) {
+            string s = i < 10 ? "  " : " ";
+            out << i << s;
+        }
+        out << endl;
+        for (int i = 0; i < N; i++) {
+            string s = i < 10 ? "  " : " ";
+            out << i << s;
+            for (int j = 0; j < N; j++) {
+                out << board[i][j] << "  ";
+            }
+            out << i;
+            out << endl << endl;
+        }
+        out << "   ";
+        for (int i = 0; i < N; i++) {
+            string s = i < 10 ? "  " : " ";
+            out << i << s;
+        }
+        out << endl;
+    }
 }
 
