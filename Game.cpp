@@ -1,10 +1,3 @@
-//
-//  Game.cpp
-//  Gomoku
-//
-//  Created by Thanh Dang on 9/3/15.
-//  Copyright (c) 2015 ga. All rights reserved.
-//
 
 #include <iostream>
 #include "Game.h"
@@ -12,45 +5,102 @@
 #include "Computer.h"
 #include <vector>
 
+//Mu Jia:
+//this two libraries for grapics
+#include <stdio.h>
+#include <windows.h>
+
 using namespace std;
 
+//Mu Jia:
+//create an enumerator of console colors
+enum ConsoleColor {
+    Black = 0,
+    Blue = 1,
+    Green = 2,
+    Cyan = 3,
+    Red = 4,
+    Magenta = 5,
+    Brown = 6,
+    LightGray = 7,
+    DarkGray = 8,
+    LightBlue = 9,
+    LightGreen = 10,
+    LightCyan = 11,
+    LightRed = 12,
+    LightMagenta = 13,
+    Yellow = 14,
+    White = 15
+};
+
+
+
+
 //create new game. A game can include many rounds if the player wants to play again
-Game::Game(){
-	board.clear();
+Game::Game() {
+    board.clear();
 }
 
+//CREATED BY VADIM IVANAEVSKII(functionality) AND GUZEL MUSINA(interface)
 //play the game in console. Here is the structure of how the game is played
-void Game::playConsole(){
-	board.clear();
-	Computer computer;
-	bool flag = true;
-	int current = 1;
-	int x = -1, y = -1;
-	vector<int> v; 
-	int playerChoice;
-	int gameType;
+void Game::playConsole() {
+    board.clear(); //clear board here
+    Computer computer;
+    bool flag = true; //flag is our game is played
+    int current = 1;
+    int x = -1, y = -1;
+    vector<int> v;
+    int playerChoice;
+    int gameType;
 
+    //Retrieves a handle to the specified standard device (standard input, standard output, or standard error).
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+/*
+ * 0 = Black 8 = Gray
+1 = Blue 9 = Light Blue
+2 = Green A = Light Green
+3 = Aqua B = Light Aqua
+4 = Red C = Light Red
+5 = Purple D = Light Purple
+6 = Yellow E = Light Yellow
+7 = White F = Bright White
+ */
+    //set all system colors that the background will be LightPurple
+    // and the text will be Bright White
+    system("color DF");
 
-	cout << "Player mode = 1, computer mode = 2" << endl;
-	cin >> gameType;
-    while (gameType != 1 && gameType != 2){
-        cout << "Incorrect choice! Enter your choice again. "<<endl;
-        cout << "Player mode = 1, computer mode = 2"<<endl;
-        cin >>playerChoice;
+    //choose mode of game
+    cout << "Player mode = 1, computer mode = 2" << endl;
+    //set for input their special color, use enum value for it
+    //Yellow - color of background, Magenta - color of text
+    SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
+    cin >> gameType;
+
+    while (gameType != 1 && gameType != 2) {
+        system("color DF");
+        cout << "Incorrect choice! Enter your choice again. " << endl;
+        cout << "Player mode = 1, computer mode = 2" << endl;
+        SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
+        cin >> playerChoice;
         if (playerChoice == 1 || playerChoice == 2) break;
     }
 
-
+    //computer mode
     if (gameType == 2) {
+        system("color DF");
         cout << "Please choose 'X' or 'O' to play.\nEnter 1 to choose 'X', 2 to choose 'O': " << endl;
+        SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
         cin >> playerChoice;
         while (playerChoice != 1 && playerChoice != 2) {
+            system("color DF");
             cout << "Incorrect choice! Enter your choice again. " << endl;
             cout << "Enter 1 to choose 'X', 2 to choose 'O': " << endl;
+            SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
             cin >> playerChoice;
             if (playerChoice == 1 || playerChoice == 2) break;
         }
 
+        //set symbols
         if (playerChoice == 1) {
             board.setPlayerSymbol('X');
             board.setComputerSymbol('O');
@@ -58,19 +108,16 @@ void Game::playConsole(){
             board.setPlayerSymbol('O');
             board.setComputerSymbol('X');
         }
-
-//	cout << "choose range of area" << endl;
-
-
-        //как убрать константу или как задать константу в начале вводом и не измениять больше
-        //cin >> N;
-
         //option for player to go first
+        system("color DF");
         cout << "You play as " << board.getPlayerSymbol() << ". Let's start!" << endl;
         cout << "Do you want to go first? y/n" << endl;
         char playerGoFirst;
+        SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
+
         cin >> playerGoFirst;
 
+        system("color DF");
         if (playerGoFirst == 'Y' || playerGoFirst == 'y') {
             current = 1;
             cout << "OK. You go first!" << endl;
@@ -79,37 +126,38 @@ void Game::playConsole(){
             current = 2;
         }
 
-        board.print();
+        board.print(); //print our board
         while (flag) {
-            //board.print();
             cout << endl;
-            if (current == 1) { //get player move
+            if (current == 1) {
+                //get player move
+                system("color DF");
                 cout << "Your turn. (" << getCurrentSymbol(current) << " )" << endl;
                 cout << "Enter X coordinate of your move: ";
+                SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
                 cin >> x;
+                system("color DF");
                 cout << "Enter Y coordinate of your move: ";
+                SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
                 cin >> y;
-            } else { // get computer move
-
+            } else {
+                // get computer move
                 v = computer.nextMoveAlphaBeta(board);
                 x = v[0];
                 y = v[1];
-                //cout << x <<" "<<y<<endl;
-                /*cout <<"Your turn. (" << getCurrentSymbol(current)<<" )"<<endl;
-                cout << "Enter X coordinate of your move: ";
-                cin >> x;
-                cout << "Enter Y coordinate of your move: ";
-                cin >> y;*/
+
             }
 
             //check if the move is legit or not
             if (!board.checkEmpty(x, y)) {
+                system("color DF");
                 cout << endl << "Not a legal move. Try again!" << endl;
                 continue; //if not, continue the loop
-            } else {//if the move is legit, update the board
-
+            } else {
+                //if the move is legit, update the board
                 board.setValue(x, y, getCurrentSymbol(current));
                 board.print();
+                system("color DF");
                 if (current == 1) {
                     cout << "Your move is : (" << x << ", " << y << ") " << endl;
                 } else {
@@ -120,6 +168,7 @@ void Game::playConsole(){
             //check if the game is over or not
             if (board.win(x, y)) {
                 board.print();
+                system("color DF");
                 if (current == 1) {
                     cout << "CONGRATULATIONS! YOU WON!" << endl;
                 } else {
@@ -128,20 +177,24 @@ void Game::playConsole(){
                 break;
             } else if (board.draw()) {
                 board.print();
+                system("color DF");
                 cout << "Draw game!" << endl;
                 break;
             } else { // if the game is not over, change current player between the player and the computer
                 current = 3 - current;
             }
         }
-    }
-    else if (gameType == 1)
-    {
+        //if is it player to player mode then 90% of functionality is the same but without computer
+    } else if (gameType == 1) {
+        system("color DF");
         cout << "Please choose 'X' or 'O' to play.\nEnter 1 to choose 'X', 2 to choose 'O': " << endl;
+        SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
         cin >> playerChoice;
         while (playerChoice != 1 && playerChoice != 2) {
+            system("color DF");
             cout << "Incorrect choice! Enter your choice again. " << endl;
             cout << "Enter 1 to choose 'X', 2 to choose 'O': " << endl;
+            SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
             cin >> playerChoice;
             if (playerChoice == 1 || playerChoice == 2) break;
         }
@@ -153,17 +206,20 @@ void Game::playConsole(){
             board.setPlayerSymbol('O');
             board.setComputerSymbol('X');
         }
-
+        system("color DF");
         cout << "p1 play as " << board.getPlayerSymbol() << ". p2 as" << board.getComputerSymbol() << endl;
 
         cout << "Who go first? 1 for p1, 2 for p2" << endl;
         int playerGoFirst;
+        SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
         cin >> playerGoFirst;
 
         if (playerGoFirst == '1') {
             current = 1;
+            system("color DF");
             cout << "OK. p1 go first!" << endl;
         } else {
+            system("color DF");
             cout << "OK. p2 go first!" << endl;
             current = 2;
         }
@@ -173,28 +229,37 @@ void Game::playConsole(){
             //board.print();
             cout << endl;
             if (current == 1) { //get player move
+                system("color DF");
                 cout << "Your turn. (" << getCurrentSymbol(current) << " )" << endl;
                 cout << "Enter X coordinate of your move: ";
+                SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
                 cin >> x;
+                system("color DF");
                 cout << "Enter Y coordinate of your move: ";
+                SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
                 cin >> y;
             } else if (current == 2) { // get p2 move
-
+                system("color DF");
                 cout << "Your turn. (" << getCurrentSymbol(current) << " )" << endl;
                 cout << "Enter X coordinate of your move: ";
+                SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
                 cin >> x;
+                system("color DF");
                 cout << "Enter Y coordinate of your move: ";
+                SetConsoleTextAttribute(hConsole, (WORD) ((Yellow << 4) |  Magenta));
                 cin >> y;
             }
 
             //check if the move is legit or not
             if (!board.checkEmpty(x, y)) {
+                system("color DF");
                 cout << endl << "Not a legal move. Try again!" << endl;
                 continue; //if not, continue the loop
             } else {//if the move is legit, update the board
 
                 board.setValue(x, y, getCurrentSymbol(current));
                 board.print();
+                system("color DF");
                 if (current == 1) {
                     cout << "p1 move is : (" << x << ", " << y << ") " << endl;
                 } else {
@@ -205,6 +270,7 @@ void Game::playConsole(){
             //check if the game is over or not
             if (board.win(x, y)) {
                 board.print();
+                system("color DF");
                 if (current == 1) {
                     cout << "p1 CONGRATULATIONS! YOU WON!" << endl;
                 } else {
@@ -213,6 +279,7 @@ void Game::playConsole(){
                 break;
             } else if (board.draw()) {
                 board.print();
+                system("color DF");
                 cout << "Draw game!" << endl;
                 break;
             } else { // if the game is not over, change current player between the player and the computer
@@ -224,37 +291,31 @@ void Game::playConsole(){
 }
 
 //get symbol of the current player
-char Game::getCurrentSymbol(int current){
-	if (current == 1){
-		return board.getPlayerSymbol();
-	}
-	else{
-		return board.getComputerSymbol();
-	}
+char Game::getCurrentSymbol(int current) {
+    if (current == 1) {
+        return board.getPlayerSymbol();
+    } else {
+        return board.getComputerSymbol();
+    }
 }
 
 
-
-
-
-
-
-
 //start the game
-void Game::run(){
-	bool flag = true;
-	char x;
-	while (flag){
-		playConsole();
-		board.printInFile();
-		cout << "Do you want to play another game? y/n"<<endl;
-		cin >> x;
-		if (x == 'N' || x == 'n'){
-			flag = false;
-		}else{
-			cout << "------------------------------------------------------"<<endl;
-		}
-	}
+void Game::run() {
+    bool flag = true;
+    char x;
+    while (flag) {
+        playConsole();
+        board.printInFile();
+        system("color DF");
+        cout << "Do you want to play another game? y/n" << endl;
+        cin >> x;
+        if (x == 'N' || x == 'n') {
+            flag = false;
+        } else {
+            cout << "------------------------------------------------------" << endl;
+        }
+    }
 }
 
 

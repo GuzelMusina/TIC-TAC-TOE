@@ -1,11 +1,3 @@
-//
-//  Game.h
-//  Gomoku
-//
-//  Created by Thanh Dang on 9/3/15.
-//  Copyright (c) 2015 ga. All rights reserved.
-//
-
 #ifndef __Gomoku__Game__
 #define __Gomoku__Game__
 

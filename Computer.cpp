@@ -1,10 +1,4 @@
-//
-//  Computer.cpp
-//  Gomoku
-//
-//  Created by Thanh Dang on 9/3/15.
-//  Copyright (c) 2015 ga. All rights reserved.
-//
+
 #include <iostream>
 
 #include "Computer.h"
@@ -13,30 +7,37 @@
 
 using namespace std;
 
-
+//CREATED BY VADIM IVANAEVSKII / gao wei guo
 //find next move with the help of alpha-beta
 //want to maximize the evaluation function. It's good for the computer
 vector<int> Computer::nextMoveAlphaBeta(Board & board){
-	vector<int> v = {0,0};
+	vector<int> v = {0,0}; // vector which save coordinates of choice
 	int M = INT_MIN, x = -1, y = -1;
-	
+
+	//check every cell
 	for (int i = 0; i <= N-1;i++){
 		for (int j = 0; j <= N-1; j++){
+		    //check if our char is '.' and check cells around
 			if (board.getValue(i, j) == '.' && adjacentPlaced(board, i, j) ){
+			    // if is it ok, then go the algorithm
 				int temp = minimaxAlphaBeta (board, 2, true,INT_MIN, INT_MAX, i, j);
+				//check if algorithm works good and knows which way is better, then x = i y = j
+				//else if temp = int_min it means that algorithm don't know which way it need to do
+				//because player choose the better cell to win
 				if (M < temp){
 					M = temp;
 					x = i;
 					y = j;
 				}
-				
 			}
 		}
 	}
+	//so if computer is first or computer don't know what it need to do, then use it
 	if (x == -1 && y == -1){
 		x = N/2;
 		y = N/2;
 	}
+	//save coordinates to array and return
 	v[0] = x;
 	v[1] = y;
 	return v;
@@ -44,7 +45,7 @@ vector<int> Computer::nextMoveAlphaBeta(Board & board){
 
 
 
-
+//Created by DANIIL KARPOV
 //minimaxAlphaBeta algorithm with alpha-beta to help determine the next move for the computer
 //Use evaluation function with depth here.
 //higher score is good for computer, lower score is good for player
@@ -94,6 +95,7 @@ int Computer::minimaxAlphaBeta(Board & board, int depth, bool isMax, int alpha, 
 	if (isMax == true){ // try to minimize because now is player's turn
 		int m = INT_MAX;
 		for (int i = 0; i < len; i++){
+			//recursive function to calculate temp
 			int temp = minimaxAlphaBeta(board,depth - 1, false, alpha, beta, firstCoord[i], secondCoord[i]);
 			if (m > temp){
 				m = temp;
@@ -111,6 +113,7 @@ int Computer::minimaxAlphaBeta(Board & board, int depth, bool isMax, int alpha, 
 	}else {//try to maximize
 		int M = INT_MIN;
 		for (int i = 0; i < len; i++){
+			//recursive function to calculate temp
 			int temp = minimaxAlphaBeta(board, depth - 1, true, alpha, beta, firstCoord[i], secondCoord[i]);
 			if (M < temp){
 				M = temp;
@@ -128,33 +131,33 @@ int Computer::minimaxAlphaBeta(Board & board, int depth, bool isMax, int alpha, 
 	}
 }
 
-
-
-
-int Computer::evaluation(Board & board, bool isMax){//if isMax is true, computer is about to make the move at (x,y)
-
+//CREATED BY VADIM IVANAEVSKII/ gao wei guo
+//this function give computer  evaluation which way better or not for every cell
+int Computer::evaluation(Board & board, bool isMax){
+    //if isMax is true, computer is about to make the move at (x,y)
 	int sum = 0;
-	vector<int> computerPattern(M+1,0);
-	vector<int> playerPattern(M+1,0);
-	
+	vector<int> computerPattern(M+1,0); //storage of computer evaluations
+	vector<int> playerPattern(M+1,0); // storage of player evaluations
+
+	//check every cell
 	for (int  i = 0 ; i < N; i++){
 		for (int j = 0; j < N ; j++){
+		    //if this cell X or Y for do some work or we don't need it to do
 			if (board.getValue(i,j) != '.'){
 				
 				//count patterns in columns
 				char c = board.getValue(i,j);
+				//bool variable is it computer symbol or not
 				bool needMax = c == board.getComputerSymbol();
-				
-				
-				
+
+				//check symbols to the top and to the bottom
 				int sameSymbol = 1; // count same symbols in columns 
 				int k = 1;
 				while (i- k >= 0 && board.getValue(i-k, j)  == c){
 					sameSymbol++;
 					k++;
 				}
-				
-				
+
 				//consider value at i - k later to see if it's blocked or not
 				int l = 1;
 				while (i + l <= N-1 && board.getValue(i+l, j) == c){
@@ -162,9 +165,12 @@ int Computer::evaluation(Board & board, bool isMax){//if isMax is true, computer
 					l++;
 				}
 
+				//if same symbols in a column >= 5 then increase counter in this place of array
 				if (sameSymbol >= M){
+				    //check is it computer symbol or not to understand which array we need
 					if (needMax) computerPattern[M]++;
 					else playerPattern[M]++;
+					//the same check but for 4,3,2,1
 				}else if (sameSymbol == M - 1 && (board.checkEmpty(i-k,j) || board.checkEmpty(i+l,j))){ 				
 					if (needMax) computerPattern[M-1]++;
 					else playerPattern[M-1]++;
@@ -183,6 +189,8 @@ int Computer::evaluation(Board & board, bool isMax){//if isMax is true, computer
 				//-------------------------------------------------------------------------------
 				sameSymbol = 1; // count same symbols in rows
 				k = 1;
+
+				//the same work but for a row
 				while (j - k >= 0 && board.getValue(i, j-k)  == c){
 					sameSymbol++;
 					k++;
@@ -196,6 +204,7 @@ int Computer::evaluation(Board & board, bool isMax){//if isMax is true, computer
 					l++;
 				}
 
+				//also like for a columns add to arrays, but it work for a row
 				if (sameSymbol >= M){
 					if (needMax) computerPattern[M]++;
 					else playerPattern[M]++;
@@ -215,8 +224,9 @@ int Computer::evaluation(Board & board, bool isMax){//if isMax is true, computer
 				
 				//--------------------------------------------------------------
 				
-				sameSymbol = 1;// count same symbols in main diagnol
+				sameSymbol = 1;// count same symbols in main diagonal
 				k = 1;
+				//the same work but for diagonals
 				while (i - k >= 0 && j - k >= 0 && board.getValue(i-k, j- k)  == c){
 					sameSymbol++;
 					k++;
@@ -254,6 +264,7 @@ int Computer::evaluation(Board & board, bool isMax){//if isMax is true, computer
 				
 				sameSymbol = 1;// count same symbols in reverse diagnols
 				k = 1;
+				//for reverse diagonals
 				while (i - k >= 0 && j + k <= N-1 && board.getValue(i-k, j+ k)  == c){
 					sameSymbol++;
 					k++;
@@ -288,8 +299,12 @@ int Computer::evaluation(Board & board, bool isMax){//if isMax is true, computer
 			}	
 		}
 	}
+	//check if we have at least 1 line with 5 or more the same symbols for computer
 	if (computerPattern[M] > 0) return INT_MAX;
+	//or for player
 	if (playerPattern[M] > 0) return INT_MIN;
+
+	//if we have not it, then need to calculate value for priorities in future
 	int x = 1;
 	sum += computerPattern[1];
 	sum -= playerPattern[1]*5;
@@ -304,14 +319,20 @@ int Computer::evaluation(Board & board, bool isMax){//if isMax is true, computer
 
 
 
-
+//Created by DANIIL KARPOV
+//Checking area near cell and return true if find character
 bool Computer::adjacentPlaced(Board & board , int x, int y){
 
 	bool value = false;
 	if (board.getValue(x,y) != '.') return false;
+	//. . .
+	//. C .
+	//. . .
+	//checking area near C
 	vector<vector<int>> adjacent = {{-1,-1},{-1,0}, {-1,1},{0,1},{0,-1},{1,-1},{1,0},{1,1}};
 	for (auto d:adjacent){
-
+		//checking nearby area
+		//it shouldn't be out of border
 		if (x+d[0] >=0 && y+d[1]>=0 && x+d[0] <= N-1 && y + d[1] <= N-1){
 			value = value || (board.getValue(x+d[0],y+d[1]) != '.');
 		}
@@ -321,7 +342,7 @@ bool Computer::adjacentPlaced(Board & board , int x, int y){
 
 
 
-
+//Created by DANIIL KARPOV
 //check if the evaluation function of a particular board is already in the memory or not
 bool Computer::checkVisitedBoard(Board & board){
 	string s = board.toString();
@@ -331,7 +352,7 @@ bool Computer::checkVisitedBoard(Board & board){
 	return false;
 }
 
-
+//CREATED BY VADIM IVANAEVSKII/ gao wei guo
 //if the evaluation function of a board is already in the memory, just need to take it out.
 // this will save time computing the evaluation function of the board.
 int Computer::getEvaluation(Board & board){
